@@ -1,0 +1,18 @@
+* {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: content-box;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    width: 960px;
+    height: 960px;
+}
+.container div {
+    background-color: rgb(186, 196, 219);
+    border: black 0.5px solid;
+    box-sizing: border-box;
+}
