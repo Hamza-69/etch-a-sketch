@@ -1,10 +1,11 @@
+let colorAction = () => {};
 let containercolor = document.querySelector(".container-color");
 let makeGrid = (n) => {
     let opacity = 0;
     containercolor.innerHTML = "";
-    if (n > 100 || n <= 0) {
-        alert("Invalid Value!! Make sure that n is at most 100!");
-        n = prompt("Enter new number of squares ( 0<n<=100)");
+    while (n > 100 || n <= 0) {
+        alert("Please enter a valid number between 1 and 100.");
+        n = prompt("Enter the number of squares per side (between 1 and 100):");
     }
     for (let i =0; i<n; i++) 
         for (let j=0;j<n;j++) {
@@ -19,10 +20,10 @@ let makeGrid = (n) => {
       let isMouseDown;
         item.addEventListener("mousedown", () => {
             isMouseDown = true;
-            color(item);
+            colorAction(item);
         });
         item.addEventListener("mouseover", () => {
-            if (isMouseDown) color(item);
+            if (isMouseDown) colorAction(item);
         });
         item.addEventListener("mouseup", () => {
             isMouseDown = false; 
@@ -33,12 +34,10 @@ makeGrid(16);
 let containertools = document.querySelector(".container-tools");
 const images = {
     "save-image.png": () => {
-      console.log("Save image action triggered");
-      // Add logic to save the image
+      makeGrid(prompt("Enter the number of squares per side (between 1 and 100):"))
     },
     "back.png": () => {
-      console.log("Back action triggered");
-      // Add logic for the "back" action
+      window.close();
     },
     "mirror.png": () => {
         console.log("Mirror action triggered");
@@ -61,8 +60,19 @@ const images = {
         // Add logic for "Erase"
       },
     "print-image.png": () => {
-      console.log("Print image action triggered");
-      // Add logic to print the image
+      let tohide = document.querySelectorAll(".tohide");
+      let tohide2 = [];
+      tohide.forEach((item) => {
+        tohide2.push(item.style.display);
+      })
+      tohide.forEach((item) => {
+        item.style.display = "none";
+      })
+      window.print();
+      let i = 0;
+      tohide.forEach((item) => {
+        item.style.display = tohide2[i++];
+      })
     }
 }
 for (let imageSrc in images) {
