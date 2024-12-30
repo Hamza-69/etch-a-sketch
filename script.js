@@ -1,4 +1,5 @@
 let colorAction = () => {};
+let stop = false;
 let containercolor = document.querySelector(".container-color");
 let makeGrid = (n) => {
     let opacity = 0;
@@ -32,8 +33,9 @@ let makeGrid = (n) => {
     };
 makeGrid(16);
 let slider = (imageSrc, customclass) => {
-  let item = `<div class="slider">
-                <img src ="silder-image/${imageSrc}">
+  let item = document.createElement("div");
+  item.className = "slider"
+  item.innerHTML = `<img src ="silder-image/${imageSrc}">
                 <div class="range-container">
                     <div class="range"></div>
                     <form>
@@ -41,33 +43,45 @@ let slider = (imageSrc, customclass) => {
                     </form>
                     <div class="slided"></div>
                     <div class="range-bg"></div>
-                </div>
-            </div>`
+                </div>`
+  return item;
+}
+let currentImage = document.querySelector(".option img");
+let imageChange = (oldImage,imageSrc) => {
+  currentImage.src = "images/"+imageSrc;
+  currentImage.className = oldImage.className;
 }
 let containertools = document.querySelector(".container-tools");
 const images = {
-    "save-image.png": () => {
+    "save-image.png": (e) => {
+      stop = true;
       makeGrid(prompt("Enter the number of squares per side (between 1 and 100):"))
     },
-    "back.png": () => {
+    "back.png": (e) => {
+      stop = true;
       window.close();
     },
-    "mirror.png": () => {
+    "mirror.png": (e) => {
+      stop = false;
+    },
+    "choose-trans.png": (e) => {
+      stop = false;
 
     },
-    "choose-trans.png": () => {
+    "vari-trans.png": (e) => {
+      stop = false;
 
     },
-    "vari-trans.png": () => {
+    "fill.png": (e) => {
+      stop = false;
 
     },
-    "fill.png": () => {
+    "erase.png": (e) => {
+      stop = false;
 
     },
-    "erase.png": () => {
-
-    },
-    "print-image.png": () => {
+    "print-image.png": (e) => {
+      stop = true;
       let tohide = document.querySelectorAll(".tohide");
       let tohide2 = [];
       tohide.forEach((item) => {
@@ -83,12 +97,21 @@ const images = {
       })
     }
 }
+let hidden = document.createElement("div");
 for (let imageSrc in images) {
     let image = document.createElement("img");
     image.src = "images/"+imageSrc;
     image.height *= 0.28;
     image.className = "click";
-    image.addEventListener("click", images[imageSrc]);
+    image.addEventListener("click", (e) => {
+      images[imageSrc](e);
+      if (!stop) {
+        imageChange(e.target, imageSrc);
+        hidden.style.opacity = "100%";
+        hidden = e.target;
+        e.target.style.opacity = 0;
+      }
+    });
     containertools.appendChild(image);
 }
 

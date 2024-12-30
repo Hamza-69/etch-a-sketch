@@ -14,7 +14,7 @@
 }
 .container-main {
     width: 1000px;
-    height: 1000px;
+    height: 914px;
     display: flex;
     flex-direction: column;
 }
@@ -97,21 +97,21 @@
     width: 125px;
     align-items: right;
 }
-.click:first-child {
+.click[src = "images/save-image.png"] {
     width: 125px;
     height: 125px;
     margin-left: 20px;
     margin-right: -5px;
     margin-top: 20px;
 }
-.click:nth-child(3) {
+.click[src = "images/mirror.png"] {
     width: 60px;
     height: 150px;
     margin-top: 10px;
     margin-left: 35px;
     margin-right: 30px;
 }
-.click:nth-child(5)  {
+.click[src = "images/vari-trans.png"] {
     width: 70px;
     height: 200px;
     margin-left: 35px;
@@ -235,4 +235,3 @@ input[type="range"] {
         inset 2px 2px 1px rgb(220, 220, 220), /* Whitish-grey (top-left) */
         inset -2px -2px 1px rgb(186, 186, 186);
  }
- 
