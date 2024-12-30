@@ -3,16 +3,88 @@
     margin: 0;
     padding: 0;
     box-sizing: content-box;
+    --thickness:15px;
+    --grad-1:linear-gradient(to top,rgb(54, 35, 100), rgb(146,104,247), white, rgb(112,151,248), rgb(42, 58, 98));
+    --grad-2:linear-gradient(to left,rgb(54, 35, 100), rgb(146,104,247), white, rgb(112,151,248), rgb(42, 58, 98));
+    --grad-3:linear-gradient(to top,rgb(42, 58, 98), rgb(112,151,248), white, rgb(146,104,247), rgb(54, 35, 100));
+    --grad-4:linear-gradient(to left,rgb(42, 58, 98), rgb(112,151,248), white, rgb(146,104,247), rgb(54, 35, 100));
+    --radius:20px;
 }
-.container {
+.container-main {
+    width: 1000px;
+    height: 1000px;
+    display: flex;
+    flex-direction: column;
+}
+.container-up{
+    display: flex;
+    position: relative;
+}
+.container-tools {
+    background-color: rgb(146,104,247);
+    height: 750px;
+    width: 250px;
+}
+.container-color {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 auto;
-    width: 960px;
-    height: 960px;
+    padding-top: 15px;
+    padding-left: 15px;
+    width: 735px;
+    height: 720px;
+    border-radius: var(--radius);
 }
-.container div {
-    background-color: rgb(186, 196, 219);
+/* Top Border */
+.container-up::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+    width: 750px;
+    height: var(--thickness); /* Thickness */
+    background:var(--grad-1);
+    border-bottom-left-radius: var(--radius); /* Match border-radius */
+    border-bottom-right-radius: var(--radius);
+}
+
+/* Bottom Border */
+.container-up::after {
+    content: "";
+    position: absolute;
+    bottom:0;
+    z-index: 1000;
+    width: 750px;
+    height: var(--thickness); /* Thickness */
+    background: var(--grad-3);
+    border-top-left-radius: var(--radius); /* Match border-radius */
+    border-top-right-radius: var(--radius);
+}
+
+.container-color .left-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--thickness); 
+    height: 100%;
+    background: var(--grad-2);
+}
+
+.container-color .right-border {
+    position: absolute;
+    top: 0;
+    right: 25%;
+    width: var(--thickness); 
+    height: 100%;
+    background: var(--grad-4);
+}
+
+.container-color div {
+    background-color: #ffffff;
     border: black 0.5px solid;
     box-sizing: border-box;
+}
+.container-down {
+    background-color: rgb(112,151,248);
+    height: 250px;
+    width: 1000px;
 }
