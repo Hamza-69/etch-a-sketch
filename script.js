@@ -31,6 +31,19 @@ let makeGrid = (n) => {
     })
     };
 makeGrid(16);
+let slider = (imageSrc, customclass) => {
+  let item = `<div class="slider">
+                <img src ="silder-image/${imageSrc}">
+                <div class="range-container">
+                    <div class="range"></div>
+                    <form>
+                    <input class = "${customclass}" type="range" min="0" max="100" value="0">
+                    </form>
+                    <div class="slided"></div>
+                    <div class="range-bg"></div>
+                </div>
+            </div>`
+}
 let containertools = document.querySelector(".container-tools");
 const images = {
     "save-image.png": () => {
@@ -40,25 +53,20 @@ const images = {
       window.close();
     },
     "mirror.png": () => {
-        console.log("Mirror action triggered");
-        // Add logic for "Mirror"
-      },
+
+    },
     "choose-trans.png": () => {
-      console.log("Choose transparent action triggered");
-      // Add logic for "Choose Transparent"
+
     },
     "vari-trans.png": () => {
-      console.log("Variable transparent action triggered");
-      // Add logic for variable transparency
+
     },
     "fill.png": () => {
-      console.log("Fill action triggered");
-      // Add logic for "Fill"
+
     },
     "erase.png": () => {
-        console.log("Erase action triggered");
-        // Add logic for "Erase"
-      },
+
+    },
     "print-image.png": () => {
       let tohide = document.querySelectorAll(".tohide");
       let tohide2 = [];
@@ -79,7 +87,16 @@ for (let imageSrc in images) {
     let image = document.createElement("img");
     image.src = "images/"+imageSrc;
     image.height *= 0.28;
-    image.className = "click image";
+    image.className = "click";
     image.addEventListener("click", images[imageSrc]);
     containertools.appendChild(image);
 }
+
+let sliders = document.querySelectorAll("input[type=\"range\"]");
+sliders.forEach((slider) => {
+  slider.addEventListener("input", ()=>{
+    const value = (slider.value - slider.min) / (slider.max - slider.min) * 9;
+    slider.parentNode.nextElementSibling.style.width = value +"rem";
+  })
+})
+
