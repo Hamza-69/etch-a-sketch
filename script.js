@@ -88,22 +88,25 @@ const images = {
     },
     "mirror.png": (e) => {
       stop = false;
+      color("mirror.png")
+      double(slider("circles.png", "mirror"), doubleImage("Mirror"));
     },
     "choose-trans.png": (e) => {
       stop = false;
-
+      color("choose-trans.png")
+      double(slider("circles.png", "choose-trans"), slider("trans.png", "choose-trans"));
     },
     "vari-trans.png": (e) => {
       stop = false;
-
+      color("vari-trans.png")
+      double(slider("circles.png", "vari-trans"), doubleImage("vari-trans"));
     },
     "fill.png": (e) => {
       stop = false;
-
+      color("fill.png");
     },
     "erase.png": (e) => {
       stop = false;
-
     },
     "print-image.png": (e) => {
       stop = true;
@@ -129,6 +132,8 @@ for (let imageSrc in images) {
     image.height *= 0.28;
     image.className = "click";
     image.addEventListener("click", (e) => {
+      let variable = document.querySelector(".variable");
+      variable.innerHTML = "";
       images[imageSrc](e);
       if (!stop) {
         imageChange(e.target, imageSrc);
@@ -138,4 +143,14 @@ for (let imageSrc in images) {
       }
     });
     containertools.appendChild(image);
+}
+let color = (imageSrc) => {
+  let div = document.createElement("div");
+  div.className = "pallete";
+  div.innerHTML = `<div class="pallete">
+                        <div class = "color-image"></div>
+                        <img src = "color-image/${imageSrc}" class = "pallete-img">
+                    </div>`
+  let container = document.querySelector(".variable");
+  container.appendChild(div);
 }

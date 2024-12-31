@@ -14,7 +14,7 @@
 }
 .container-main {
     width: 1000px;
-    height: 914px;
+    height: 1000px;
     display: flex;
     flex-direction: column;
 }
@@ -90,11 +90,11 @@
 }
 .container-down {
     background-color: rgb(112,151,248);
-    height: 250px;
     width: 1000px;
 }
 .click {
     width: 125px;
+    flex-grow: 0;
     align-items: right;
 }
 .click[src = "images/save-image.png"] {
@@ -117,7 +117,10 @@
     margin-left: 35px;
     margin-right: 30px;
 }
-
+.click[src = "images/erase.png"] {
+    height: 150px;
+    align-self: center;
+}
 /********** Range Input Styles **********/
 .range-container {
     position: relative;
@@ -235,7 +238,36 @@ input[type="range"] {
         inset 2px 2px 1px rgb(220, 220, 220), /* Whitish-grey (top-left) */
         inset -2px -2px 1px rgb(186, 186, 186);
  }
- 
+.double {
+    margin-top: 15px;
+}
  .double-button {
     width:11.3rem;
+ }
+
+ .option {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 200px;
+ }
+.variable {
+    flex: 0 1 0;
+    display: flex;
+    flex-direction: row-reverse;
+}
+.pallete {
+    display: flex;
+    margin-left: 10px;
+}
+ .pallete-img {
+    margin: 10px 10px 0 10px;
+    width: 470px;
+ }
+ .color-image {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 3px rgb(0, 0, 0) solid;
+    width :35px;
+    background-color: red;
  }
