@@ -32,6 +32,26 @@ let makeGrid = (n) => {
     })
     };
 makeGrid(16);
+let doubleImage = (imageSrc) => {
+  let img = document.createElement("img");
+  img.src = `double-button/${imageSrc}_0.png`
+  img.className = "double-button"
+  img.addEventListener("click", (e) => {
+    const rect = img.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    let pos = Math.round(x/180.8);
+    img.src = `double-button/${imageSrc}_${pos}.png`
+  })
+  return img;
+} 
+let double = (first, second) => {
+  let div = document.createElement("div");
+  div.className = "double";
+  div.appendChild(first);
+  div.appendChild(second);
+  let variable = document.querySelector(".variable");
+  variable.appendChild(div);
+}
 let slider = (imageSrc, customclass) => {
   let item = document.createElement("div");
   item.className = "slider"
@@ -44,6 +64,11 @@ let slider = (imageSrc, customclass) => {
                     <div class="slided"></div>
                     <div class="range-bg"></div>
                 </div>`
+  let slide = item.querySelector("input");
+  slide.addEventListener("input", ()=>{
+    const value = (slide.value - slide.min) / (slide.max - slide.min) * 9;
+    slide.parentNode.nextElementSibling.style.width = value +"rem";
+    })         
   return item;
 }
 let currentImage = document.querySelector(".option img");
@@ -114,12 +139,3 @@ for (let imageSrc in images) {
     });
     containertools.appendChild(image);
 }
-
-let sliders = document.querySelectorAll("input[type=\"range\"]");
-sliders.forEach((slider) => {
-  slider.addEventListener("input", ()=>{
-    const value = (slider.value - slider.min) / (slider.max - slider.min) * 9;
-    slider.parentNode.nextElementSibling.style.width = value +"rem";
-  })
-})
-
