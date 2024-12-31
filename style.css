@@ -12,6 +12,13 @@
     --thumb: rgb(235,232,216);
     cursor: pointer;
 }
+body {
+    display: flex;
+    height: max(100vh, 1000px);
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+}
 .container-main {
     width: 1000px;
     height: 1000px;
