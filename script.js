@@ -100,28 +100,37 @@ const images = {
       window.close();
     },
     "mirror.png": (e) => {
+      let variable = document.querySelector(".variable");
+      variable.innerHTML = "";
       stop = false;
       color("mirror.png")
       double(slider("circles.png", "mirror"), doubleImage("Mirror"));
     },
     "choose-trans.png": (e) => {
+      let variable = document.querySelector(".variable");
+      variable.innerHTML = "";
       stop = false;
       color("choose-trans.png")
       double(slider("circles.png", "choose-trans"), slider("trans.png", "choose-trans"));
     },
     "vari-trans.png": (e) => {
+      let variable = document.querySelector(".variable");
+      variable.innerHTML = "";
       stop = false;
       color("vari-trans.png")
       double(slider("circles.png", "vari-trans"), doubleImage("vari-trans"));
     },
     "fill.png": (e) => {
+      let variable = document.querySelector(".variable");
+      variable.innerHTML = "";
       stop = false;
       color("fill.png");
     },
     "erase.png": (e) => {
+      let variable = document.querySelector(".variable");
+      variable.innerHTML = "";
       stop = false;
       double(slider("squares.png", "erase"), doubleImage("Erase")).style.marginRight = "200px";
-      let variable = document.querySelector(".variable");
       variable.appendChild(eraseState());
     },
     "print-image.png": (e) => {
@@ -152,8 +161,6 @@ for (let imageSrc in images) {
     image.height *= 0.28;
     image.className = "click";
     image.addEventListener("click", (e) => {
-      let variable = document.querySelector(".variable");
-      variable.innerHTML = "";
       images[imageSrc](e);
       if (!stop) {
         imageChange(e.target, imageSrc);
