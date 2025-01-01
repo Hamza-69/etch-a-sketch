@@ -22,8 +22,9 @@ body {
     background-color: black;
 }
 .container-main {
+    background: white;
     width: 1000px;
-    height: 1000px;
+    height: 900px;
     display: flex;
     flex-direction: column;
 }
@@ -94,7 +95,7 @@ body {
 
 .container-color div {
     background-color: #ffffff;
-    border: black 0.5px solid;
+    border: rgb(142, 142, 142) 0.5px solid;
     box-sizing: border-box;
 }
 .container-down {
@@ -114,10 +115,14 @@ body {
     margin-right: -5px;
     margin-top: 20px;
 }
+.click[src = "images/fill.png"] {
+    height: 170px;
+    margin-top: 20px;
+}
 .click[src = "images/mirror.png"] {
     width: 60px;
-    height: 150px;
-    margin-top: 10px;
+    height: 160px;
+    margin-top: 25px;
     margin-left: 35px;
     margin-right: 30px;
 }
@@ -251,7 +256,7 @@ input[type="range"] {
 .double {
     margin-top: 15px;
 }
- .double-button {
+.double-button {
     width:11.3rem;
  }
 
@@ -271,8 +276,9 @@ input[type="range"] {
     margin-left: 10px;
 }
  .pallete-img {
-    margin: 10px 10px 0 10px;
-    width: 470px;
+    margin: 0 10px;
+    width: 460px;
+    height: 200px;
  }
  .color-image {
     margin-top: 10px;
