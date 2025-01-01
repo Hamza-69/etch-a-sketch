@@ -14,8 +14,10 @@
 }
 body {
     display: flex;
+    width: 1000px;
     height: max(100vh, 1000px);
-    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
     justify-content: center;
     background-color: black;
 }
@@ -103,6 +105,7 @@ body {
     width: 125px;
     flex-grow: 0;
     align-items: right;
+    height: auto;
 }
 .click[src = "images/save-image.png"] {
     width: 125px;
@@ -277,4 +280,10 @@ input[type="range"] {
     border: 3px rgb(0, 0, 0) solid;
     width :35px;
     background-color: red;
+ }
+ .eraser {
+    width: 392px;
+    height: 79px;
+    margin-top: 55px;
+    margin-right: 50px;
  }

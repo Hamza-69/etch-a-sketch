@@ -44,6 +44,18 @@ let doubleImage = (imageSrc) => {
   })
   return img;
 } 
+let eraseState = () => {
+  let img = document.createElement("img");
+  img.src = `eraser/eraser_0.png`
+  img.className = "eraser"
+  img.addEventListener("click", (e) => {
+    const rect = img.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    let pos = Math.floor(x/76.8) > 4? 4: Math.floor(x/76.8);
+    img.src = `eraser/eraser_${pos}.png`
+  })
+  return img;
+} 
 let double = (first, second) => {
   let div = document.createElement("div");
   div.className = "double";
@@ -51,6 +63,7 @@ let double = (first, second) => {
   div.appendChild(second);
   let variable = document.querySelector(".variable");
   variable.appendChild(div);
+  return div;
 }
 let slider = (imageSrc, customclass) => {
   let item = document.createElement("div");
@@ -107,21 +120,28 @@ const images = {
     },
     "erase.png": (e) => {
       stop = false;
+      double(slider("squares.png", "erase"), doubleImage("Erase")).style.marginRight = "200px";
+      let variable = document.querySelector(".variable");
+      variable.appendChild(eraseState());
     },
     "print-image.png": (e) => {
       stop = true;
       let tohide = document.querySelectorAll(".tohide");
-      let tohide2 = [];
       tohide.forEach((item) => {
-        tohide2.push(item.style.display);
+        item.style.opacity = 0;
       })
-      tohide.forEach((item) => {
-        item.style.display = "none";
-      })
+      let main = document.querySelector(".container-main");
+      main.style.marginLeft = "250px";
+      main.style.marginTop = "200px";
+      let body = document.querySelector("body");
+      body.style.background = "white";
       window.print();
+      main.style.marginLeft = "0px";
+      main.style.marginTop = "0px";
+      body.style.background = "black";
       let i = 0;
       tohide.forEach((item) => {
-        item.style.display = tohide2[i++];
+        item.style.opacity = "100%";
       })
     }
 }
