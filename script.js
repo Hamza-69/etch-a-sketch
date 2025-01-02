@@ -14,6 +14,15 @@ let conditions = {
 let divs = [];
 let nPublic = 16;
 let colorAction = (div, color) => {
+  if (conditions["mirror"]) {
+    div.style.backgroundColor = color;
+    div.style.opacity = opacityPublic+"%";
+    let divX = div.getAttribute("data-x");
+    let divY = nPublic - div.getAttribute("data-y") -1;
+    let ref = document.querySelector(`.box${divX}-${divY}`)
+    ref.style.backgroundColor = color;
+    ref.style.opacity = opacityPublic+"%";
+  }
   div.style.backgroundColor = color;
   div.style.opacity = opacityPublic+"%";
 };
@@ -51,6 +60,8 @@ let makeGrid = (n) => {
         item.addEventListener("mousedown", () => {
             isMouseDown = true;
             if (conditions["fill"]) {
+              let Oldcolor = item.style.background;
+              fill(item, Oldcolor);
             }
             else if (conditions["eradicate"]) {
               boxes.forEach(item => {
@@ -58,10 +69,11 @@ let makeGrid = (n) => {
                 item.style.opacity = "100%";
               })
             }
-            else colorSize(item);
+            else colorSize(item,size);
         });
         item.addEventListener("mouseenter", () => { 
           if (isMouseDown && conditions["fill"]) {
+            fill(item, item.style.background);
           }
           else if (isMouseDown && conditions["eradicate"]) {
               boxes.forEach(item => {
@@ -69,7 +81,7 @@ let makeGrid = (n) => {
                 item.style.opacity = "100%";
               })
             }
-            else if (isMouseDown && !conditions["eradicate"]) colorSize(item);
+            else if (isMouseDown && !conditions["eradicate"]) colorSize(item,size);
         });
         item.addEventListener("mouseup", () => {
             isMouseDown = false; 
@@ -79,16 +91,22 @@ let makeGrid = (n) => {
     })
     };
 makeGrid(16);
-let colorBounds = (div, dx, dy) => {
+let check = (div, color) => {
+  return div.style.backgroundColor == color;
+}
+let colorBounds = (div, dx, dy, Oldcolor = "def") => {
   let newX = +div.getAttribute("data-x")+dx;
   let newY = +div.getAttribute("data-y")+dy;
-  if (newX >= nPublic || newY >= nPublic || newX < 0 || newY < 0) return;
-  else {
-    let newDiv = document.querySelector(`.box${newX}-${newY}`);
+  if (newX < nPublic && newY < nPublic && newX >= 0 && newY >= 0) {
+    let newDiv = document.querySelector(`.box${newX}-${newY}`)
+    if (Oldcolor=="def" || check(newDiv, Oldcolor)) {
     colorAction(newDiv, conditions["eraser"]? "white":colorPublic);
+    }
+    else return "stop";
   }
+  else return "stop";
 }
-let colorSize = (div) => {
+let colorSize = (div,size) => {
   if (size == 1|| size == 2|| size == 3 || size == 4 ||size >=5) {
     colorBounds(div, 0, 0);
     if (size == 2|| size == 3 || size == 4 ||size >=5) {
@@ -350,7 +368,7 @@ let colorPallete = (imageSrc, nbx, nby) => {
     else colors[index]();
   })
 }
-const button = document.querySelector('.click[src = "images/choose-trans.png"]');
+const button = document.querySelector('.click[src = "images/mirror.png"]');
 button.dispatchEvent(new Event('click'));
 
 let randomColor = () =>{
@@ -364,9 +382,10 @@ let anyColor = (color) => {
     let box = document.querySelector(".color-image");
     box.style.background = color;
     conditions["randomColor"] = false;
-
   };
   return colorClosure;
+}
+let fill = (div, Oldcolor) => {
 }
 let colors = [
   randomColor, 
