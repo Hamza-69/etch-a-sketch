@@ -1,6 +1,6 @@
 let slideValue = 0;
 let size  = 1;
-let colorPublic = "rgba(0,0,0,1)";
+let colorPublic = "rgb(0,0,0)";
 let opacityPublic = 100;
 let opacitySliderValue = 100;
 let conditions = {
@@ -11,29 +11,36 @@ let conditions = {
   "eradicate" :false,
   "fill" : false
 }
+let divs = [];
 let nPublic = 16;
-let colorAction = (e, color) => {
-  e.style.backgroundColor = color;
-  e.style.opacity = opacityPublic+"%";
+let colorAction = (div, color) => {
+  div.style.backgroundColor = color;
+  div.style.opacity = opacityPublic+"%";
 };
 let stop = false;
 let containercolor = document.querySelector(".container-color");
 let makeGrid = (n) => {
-  nPublic = n;
+    nPublic = n;
     let opacity = 0;
     containercolor.innerHTML = "";
-    while (n > 100 || n <= 0) {
+    while (n > 100 || n <= 0 || isNaN(n/3)) {
         alert("Please enter a valid number between 1 and 100.");
         n = prompt("Enter the number of squares per side (between 1 and 100):");
     }
-    for (let i =0; i<n; i++) 
+    for (let i =0; i<n; i++) {
+      let divsMini= [];
         for (let j=0;j<n;j++) {
             let box = document.createElement("div");
-            box.className = "box";
+            box.className = "box" +` box${i}-${j}`;
+            box.setAttribute("data-x", i)
+            box.setAttribute("data-y", j)
             box.style.width = 720/n + "px";
             box.style.height = 720/n + "px";
             containercolor.appendChild(box);
+            divsMini.push(box);
         }
+        divs.push(divsMini);
+    }
     containercolor.innerHTML += "<div class=\"left-border\"></div>\n<div class=\"right-border\"></div>"
     let boxes = document.querySelectorAll(".container-color .box");
     boxes.forEach(item => {
@@ -48,9 +55,10 @@ let makeGrid = (n) => {
             else if (conditions["eradicate"]) {
               boxes.forEach(item => {
                 item.style.background = "white";
+                item.style.opacity = "100%";
               })
             }
-            else colorAction(item, conditions["eraser"]? "white":colorPublic);
+            else colorSize(item);
         });
         item.addEventListener("mouseenter", () => { 
           if (isMouseDown && conditions["fill"]) {
@@ -58,9 +66,10 @@ let makeGrid = (n) => {
           else if (isMouseDown && conditions["eradicate"]) {
               boxes.forEach(item => {
                 item.style.background = "white";
+                item.style.opacity = "100%";
               })
             }
-            else if (isMouseDown && !conditions["eradicate"]) colorAction(item, conditions["eraser"]? "white":colorPublic);
+            else if (isMouseDown && !conditions["eradicate"]) colorSize(item);
         });
         item.addEventListener("mouseup", () => {
             isMouseDown = false; 
@@ -70,6 +79,53 @@ let makeGrid = (n) => {
     })
     };
 makeGrid(16);
+let colorBounds = (div, dx, dy) => {
+  let newX = +div.getAttribute("data-x")+dx;
+  let newY = +div.getAttribute("data-y")+dy;
+  if (newX >= nPublic || newY >= nPublic || newX < 0 || newY < 0) return;
+  else {
+    let newDiv = document.querySelector(`.box${newX}-${newY}`);
+    colorAction(newDiv, conditions["eraser"]? "white":colorPublic);
+  }
+}
+let colorSize = (div) => {
+  if (size == 1|| size == 2|| size == 3 || size == 4 ||size >=5) {
+    colorBounds(div, 0, 0);
+    if (size == 2|| size == 3 || size == 4 ||size >=5) {
+      colorBounds(div, 0, 1);
+      colorBounds(div, 1, 0);
+      colorBounds(div, -1, 0);
+      colorBounds(div, 0, -1); 
+      if (size == 3 || size == 4 ||size >=5) {
+        colorBounds(div, 1, 1);
+        colorBounds(div, -1, -1);
+        colorBounds(div, -1, 1);
+        colorBounds(div, 1, -1);
+
+    if (size == 4 ||size >=5) {
+      colorBounds(div, 0, 2);
+      colorBounds(div, 0, -2);
+      colorBounds(div, 2, 0);
+      colorBounds(div, -2, 0);
+      colorBounds(div, 1, -2);
+      colorBounds(div, -2, -1);
+      colorBounds(div, -1, -2);
+      colorBounds(div, 2, -1);
+      colorBounds(div, 1, 2);
+      colorBounds(div, 2, 1);
+      colorBounds(div, -1, 2);
+      colorBounds(div, -2, 1);
+    if (size == 5) {
+      colorBounds(div, 2, 2);
+      colorBounds(div, -2, -2);
+      colorBounds(div, -2, 2);
+      colorBounds(div, 2, -2);
+    } 
+    } 
+    } 
+    }
+  }
+}
 let doubleImage = (imageSrc, condition) => {
   let img = document.createElement("img");
   img.src = `double-button/${imageSrc}_0.png`
@@ -134,7 +190,7 @@ let slider = (imageSrc) => {
   let slide = item.querySelector("input");
   slide.addEventListener("input", ()=>{
     slideValue = slide.value;
-    size = Math.floor(slideValue/20)
+    size = Math.floor(slideValue/25) + 1;
     const value = (slide.value - slide.min) / (slide.max - slide.min) * 9;
     slide.parentNode.nextElementSibling.style.width = value +"rem";
     })
