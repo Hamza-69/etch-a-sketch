@@ -15,15 +15,15 @@ let divs = [];
 let nPublic = 16;
 let colorAction = (div, color) => {
   if (conditions["mirror"]) {
-    div.style.backgroundColor = color;
+    div.style.background = color;
     div.style.opacity = opacityPublic+"%";
     let divX = div.getAttribute("data-x");
     let divY = nPublic - div.getAttribute("data-y") -1;
     let ref = document.querySelector(`.box${divX}-${divY}`)
-    ref.style.backgroundColor = color;
+    ref.style.background = color;
     ref.style.opacity = opacityPublic+"%";
   }
-  div.style.backgroundColor = color;
+  div.style.background = color;
   div.style.opacity = opacityPublic+"%";
 };
 let stop = false;
@@ -61,7 +61,7 @@ let makeGrid = (n) => {
             isMouseDown = true;
             if (conditions["fill"]) {
               let Oldcolor = item.style.background;
-              fill(item, Oldcolor);
+              fill(item.getAttribute("data-x"), item.getAttribute("data-y"), Oldcolor);
             }
             else if (conditions["eradicate"]) {
               boxes.forEach(item => {
@@ -94,17 +94,13 @@ makeGrid(16);
 let check = (div, color) => {
   return div.style.backgroundColor == color;
 }
-let colorBounds = (div, dx, dy, Oldcolor = "def") => {
+let colorBounds = (div, dx, dy) => {
   let newX = +div.getAttribute("data-x")+dx;
   let newY = +div.getAttribute("data-y")+dy;
   if (newX < nPublic && newY < nPublic && newX >= 0 && newY >= 0) {
     let newDiv = document.querySelector(`.box${newX}-${newY}`)
-    if (Oldcolor=="def" || check(newDiv, Oldcolor)) {
     colorAction(newDiv, conditions["eraser"]? "white":colorPublic);
-    }
-    else return "stop";
   }
-  else return "stop";
 }
 let colorSize = (div,size) => {
   if (size == 1|| size == 2|| size == 3 || size == 4 ||size >=5) {
@@ -341,7 +337,7 @@ for (let imageSrc in images) {
         hidden.style.opacity = "100%";
         hidden = e.target;
         e.target.style.opacity = 0;
-        opacity = 100;
+        opacityPublic = 100;
         opacitySliderValue = 100;
       }
     });
@@ -385,8 +381,31 @@ let anyColor = (color) => {
   };
   return colorClosure;
 }
-let fill = (div, Oldcolor) => {
-}
+let fill = (x, y, Oldcolor) => {
+  let stack = [[x, y]];
+  let visited = new Set();
+  while (stack.length > 0) {
+    let [currX, currY] = stack.pop();
+    if (currX < 0 || currY < 0 || currX >= nPublic || currY >= nPublic) {
+      continue;
+    }
+    let newDiv = document.querySelector(`.box${currX}-${currY}`);
+    if (
+      visited.has(`${currX}-${currY}`) ||
+      newDiv.style.backgroundColor !== Oldcolor
+    ) {
+      continue;
+    }
+    colorAction(newDiv, colorPublic);
+    visited.add(`${currX}-${currY}`);
+    
+    stack.push([currX + 1, currY]);
+    stack.push([currX - 1, currY]);
+    stack.push([currX, currY + 1]);
+    stack.push([currX, currY - 1]);
+  }
+};
+
 let colors = [
   randomColor, 
   anyColor("rgb(51,51,51)"),
