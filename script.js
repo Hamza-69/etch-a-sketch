@@ -11,9 +11,16 @@ let conditions = {
   "eradicate" :false,
   "fill" : false
 }
+let changeAudio = (s, aud = document.querySelector(".color-audio")) => {
+  aud.src = "audio/"+s;
+} 
+let playAudio = (a) => {
+  a.play();
+} 
 let divs = [];
 let nPublic = 16;
 let colorAction = (div, color) => {
+  playAudio(document.querySelector(".color-audio"));
   if (conditions["mirror"]) {
     div.style.background = color;
     div.style.opacity = opacityPublic+"%";
@@ -32,9 +39,9 @@ let makeGrid = (n) => {
     nPublic = n;
     let opacity = 0;
     containercolor.innerHTML = "";
-    while (n > 100 || n <= 0 || isNaN(n/3)) {
-        alert("Please enter a valid number between 1 and 100.");
-        n = prompt("Enter the number of squares per side (between 1 and 100):");
+    while (n > 99 || n <= 0 || isNaN(n/3)) {
+        alert("Please enter a valid number between 1 and 99.");
+        n = prompt("Enter the number of squares per side (between 1 and 99):");
     }
     for (let i =0; i<n; i++) {
       let divsMini= [];
@@ -57,13 +64,15 @@ let makeGrid = (n) => {
     })
     let isMouseDown;
     boxes.forEach( item => {
-        item.addEventListener("mousedown", () => {
+        item.addEventListener("mousedown", (e) => {
+          e.stopPropagation();
             isMouseDown = true;
             if (conditions["fill"]) {
               let Oldcolor = item.style.background;
               fill(item.getAttribute("data-x"), item.getAttribute("data-y"), Oldcolor);
             }
             else if (conditions["eradicate"]) {
+              playAudio(document.querySelector(".custom-audio"))
               boxes.forEach(item => {
                 item.style.background = "white";
                 item.style.opacity = "100%";
@@ -71,11 +80,13 @@ let makeGrid = (n) => {
             }
             else colorSize(item,size);
         });
-        item.addEventListener("mouseenter", () => { 
+        item.addEventListener("mouseenter", (e) => {
+          e.stopPropagation(); 
           if (isMouseDown && conditions["fill"]) {
             fill(item, item.style.background);
           }
           else if (isMouseDown && conditions["eradicate"]) {
+            playAudio(document.querySelector(".custom-audio"))
               boxes.forEach(item => {
                 item.style.background = "white";
                 item.style.opacity = "100%";
@@ -83,10 +94,17 @@ let makeGrid = (n) => {
             }
             else if (isMouseDown && !conditions["eradicate"]) colorSize(item,size);
         });
-        item.addEventListener("mouseup", () => {
+        item.addEventListener("mouseup", (e) => {
+          e.stopPropagation();
             isMouseDown = false; 
             if (conditions["randomColor"]) randomColor();
             if (conditions["progressiveOpacity"]) opacityPublic += opacityPublic>=100? -90:10;
+        });
+        item.addEventListener("click", (e) => {
+          e.stopPropagation();
+        });
+        item.addEventListener("mouseup", (e) => {
+          e.stopPropagation();
         });
     })
     };
@@ -168,15 +186,21 @@ let eraseState = () => {
   img.src = `eraser/eraser_0.png`
   img.className = "eraser"
   img.addEventListener("click", (e) => {
+    e.stopPropagation();
     const rect = img.getBoundingClientRect();
     const x = e.clientX - rect.left;
     let pos = Math.floor(x/76.8) > 4? 4: Math.floor(x/76.8);
-    if (pos >0) conditions["eradicate"] = true;
-    if (pos ==0) {
+    if (pos >0)  {
+      conditions["eradicate"] = true;
+      changeAudio(`eraser_${pos}.mp3`, document.querySelector(".custom-audio"));
+      playAudio(document.querySelector(".custom-audio"))
+    }
+    else {
       conditions["erase"] = true;
       conditions["eradicate"] = false;
     }
     img.src = `eraser/eraser_${pos}.png`
+    changeAudio(`eraser_${pos}.mp3`);
   })
   return img;
 } 
@@ -242,13 +266,17 @@ let containertools = document.querySelector(".container-tools");
 const images = {
     "save-image.png": (e) => {
       stop = true;
-      makeGrid(prompt("Enter the number of squares per side (between 1 and 100):"))
+      makeGrid(prompt("Enter the number of squares per side (between 1 and 99):"))
     },
     "back.png": (e) => {
       stop = true;
       window.close();
     },
     "mirror.png": (e) => {
+      for (cond in conditions) {
+      if (cond == "randomColor") continue;
+      conditions[cond] = false;
+      }
       let variable = document.querySelector(".variable");
       variable.innerHTML = "";
       stop = false;
@@ -256,8 +284,13 @@ const images = {
       double(slider("circles.png"), doubleImage("Mirror", "mirror"));
       let box = document.querySelector(".color-image");
       box.style.background = colorPublic;
+      changeAudio("mirror.mp3")
     },
     "choose-trans.png": (e) => {
+      for (cond in conditions) {
+      if (cond == "randomColor") continue;
+      conditions[cond] = false;
+      }
       let variable = document.querySelector(".variable");
       variable.innerHTML = "";
       stop = false;
@@ -265,8 +298,13 @@ const images = {
       double(slider("circles.png"), sliderOpacity("trans.png"));
       let box = document.querySelector(".color-image");
       box.style.background = colorPublic;
+      changeAudio("choose-trans.mp3")
     },
     "vari-trans.png": (e) => {
+      for (cond in conditions) {
+      if (cond == "randomColor") continue;
+      conditions[cond] = false;
+      }
       let variable = document.querySelector(".variable");
       variable.innerHTML = "";
       stop = false;
@@ -274,8 +312,13 @@ const images = {
       double(slider("circles.png"), doubleImage("vari-trans", "progressiveOpacity"));
       let box = document.querySelector(".color-image");
       box.style.background = colorPublic;
+      changeAudio("vari-trans.mp3")
     },
     "fill.png": (e) => {
+      for (cond in conditions) {
+      if (cond == "randomColor") continue;
+      conditions[cond] = false;
+      }
       conditions["fill"] = true;
       let variable = document.querySelector(".variable");
       variable.innerHTML = "";
@@ -283,14 +326,20 @@ const images = {
       colorPallete("fill.png", 8, 3);
       let box = document.querySelector(".color-image");
       box.style.background = colorPublic;
+      changeAudio("fill.mp3")
     },
     "erase.png": (e) => {
+      for (cond in conditions) {
+      if (cond == "randomColor") continue;
+      conditions[cond] = false;
+      }
       conditions["eraser"] = true;
       let variable = document.querySelector(".variable");
       variable.innerHTML = "";
       stop = false;
       double(slider("squares.png"), doubleImage("Erase")).style.marginRight = "200px";
       variable.appendChild(eraseState());
+      changeAudio("eraser_0.mp3")
     },
     "print-image.png": (e) => {
       let boxes = document.querySelectorAll(".container-color .box");
@@ -327,10 +376,6 @@ for (let imageSrc in images) {
     image.height *= 0.28;
     image.className = "click";
     image.addEventListener("click", (e) => {
-      for (cond in conditions) {
-      if (cond == "randomColor") continue;
-      conditions[cond] = false;
-      }
       images[imageSrc](e);
       if (!stop) {
         imageChange(e.target, imageSrc);
@@ -398,7 +443,6 @@ let fill = (x, y, Oldcolor) => {
     }
     colorAction(newDiv, colorPublic);
     visited.add(`${currX}-${currY}`);
-    
     stack.push([currX + 1, currY]);
     stack.push([currX - 1, currY]);
     stack.push([currX, currY + 1]);
@@ -458,3 +502,9 @@ let colors2 = [
   anyColor("rgb(196,155,249)"),
   anyColor("rgb(241,158,250)")
 ]
+document.querySelector("body").addEventListener("click", () => {
+  playAudio(document.querySelector(".click-audio"));
+})
+document.querySelector(".container-color").addEventListener("click", (e) => {
+  e.stopPropagation();
+})
